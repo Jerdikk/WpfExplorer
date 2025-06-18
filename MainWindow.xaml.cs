@@ -24,21 +24,32 @@ namespace WpfExplorer
     public partial class MainWindow : Window
     {
         public TreeViewItem trItem;
-        public ObservableCollection<MyFilesStruct> myFilesStructs { get; set; } = new ObservableCollection<MyFilesStruct>();
+        public MyFilesStruct selectedFileStruct;
+        public MainWindowModel model;
+     //   public ObservableCollection<MyFilesStruct> myFilesStructs { get; set; } = new ObservableCollection<MyFilesStruct>();
         public MainWindow()
         {
+            model = new MainWindowModel();
             InitializeComponent();
-
+            this.DataContext = model;
             trView.Items.Clear();
+            model.Title = "111";
             try
             {
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
                 {
                     TreeViewItem item = new TreeViewItem();
-                    item.Tag = drive;
+                    //item.Tag = drive;
                     item.Header = drive.ToString();
-                    item.Items.Add("*");
+                    //item.Items.Add("*");
                     trView.Items.Add(item);
+                    MyFilesStruct myFilesStruct = new MyFilesStruct();  
+                    myFilesStruct.fileName = drive.Name;
+                    myFilesStruct.fullName = drive.Name;
+                    myFilesStruct.typeFile = TypesFile.Drive;
+                    myFilesStruct.tag = drive;
+                    item.Tag = myFilesStruct;
+                  //  item.Header = myFilesStruct;
                 }
             }
             catch (Exception ex)
@@ -55,52 +66,70 @@ namespace WpfExplorer
 
                 if (item == null) return;
 
+                MyFilesStruct myFilesStruct1 = item.Tag as MyFilesStruct;
+
+                if (myFilesStruct1.tag is FileInfo)
+                    return;
+
                 item.Items.Clear();
                 DirectoryInfo dir;
 
-                if (item.Tag is DriveInfo)
+                if (myFilesStruct1.tag is DriveInfo)
                 {
-                    DriveInfo drive = (DriveInfo)item.Tag;
+                    DriveInfo drive = (DriveInfo)myFilesStruct1.tag;
                     dir = drive.RootDirectory;
                 }
                 else
-                    dir = (DirectoryInfo)item.Tag;
+                    dir = (DirectoryInfo)myFilesStruct1.tag;
 
-                myFilesStructs.Clear();
+               // myFilesStructs.Clear();
 
-                FileInfo[] fileInfos = dir.GetFiles("*.*");
-                   
+               // FileInfo[] fileInfos = dir.GetFiles("*.*");
 
 
-                foreach (FileInfo file in fileInfos)
+
+                /*foreach (FileInfo file in fileInfos)
                 {
                     MyFilesStruct myFilesStruct = new MyFilesStruct();
-                   
+
                     {
                         myFilesStruct.fileName = file.Name;
+                        myFilesStruct.fullName = file.FullName;
                         myFilesStruct.isSelected = false;
+                        myFilesStruct.isFile = true;
                     }
                     myFilesStructs.Add(myFilesStruct);
-                }
+                }*/
 
-               // cvMainVMM.selectedDirectory = dir.FullName;
-               // GetAllPadFiles(dir.FullName);
+                // cvMainVMM.selectedDirectory = dir.FullName;
+                // GetAllPadFiles(dir.FullName);
 
                 foreach (DirectoryInfo subDir in dir.GetDirectories())
                 {
                     TreeViewItem newItem = new TreeViewItem();
-                    newItem.Tag = subDir;
+                   // newItem.Tag = subDir;
                     newItem.Header = subDir.ToString();
                     newItem.Items.Add("*");
                     item.Items.Add(newItem);
+                    MyFilesStruct myFilesStruct = new MyFilesStruct();
+                    myFilesStruct.typeFile = TypesFile.Directory;
+                    myFilesStruct.fullName = subDir.FullName;
+                    myFilesStruct.tag = subDir;
+                    newItem.Tag = myFilesStruct;
                 }
                 foreach (FileInfo subDir in dir.GetFiles())
                 {
-                    TreeViewItem newItem = new TreeViewItem();                    
-                    newItem.Tag = subDir;
-                    newItem.Header = subDir;
+                    TreeViewItem newItem = new TreeViewItem();
+                   // newItem.Tag = subDir;
+                    newItem.Header = subDir.ToString();
                     //newItem.Items.Add("*");
                     item.Items.Add(newItem);
+                    MyFilesStruct myFilesStruct = new MyFilesStruct();
+                    myFilesStruct.typeFile = TypesFile.File;
+                    myFilesStruct.fullName = subDir.FullName;
+                    myFilesStruct.fileName = subDir.Name;
+                    myFilesStruct.tag = subDir;
+                    newItem.Tag = myFilesStruct;
                 }
             }
             catch (Exception ex)
@@ -119,49 +148,11 @@ namespace WpfExplorer
 
                 if (trItem == null) return;
 
-                DirectoryInfo dir;
-                if (trItem.Tag is DriveInfo)
-                {
-                    DriveInfo drive = (DriveInfo)trItem.Tag;
-                    dir = drive.RootDirectory;
-                }
-                else
-                    dir = (DirectoryInfo)trItem.Tag;
+                //MyFilesStruct dir;
+                selectedFileStruct = (MyFilesStruct)trItem.Tag;
+                model.Title = selectedFileStruct.fullName;
+                //dir.isSelected = true;
 
-                myFilesStructs.Clear();
-                FileInfo[] fileInfos = dir.GetFiles("*.*");
-
-            //    if ((cvMainVMM.selectedGeoTablet != null) && (cvMainVMM.selectedGeoTablet.fileName != null) && (cvMainVMM.selectedGeoTablet.fileName.ToLower().IndexOf(".pad") == -1))
-            //        cvMainVMM.selectedGeoTablet.fileName += ".pad";
-
-                foreach (FileInfo file in fileInfos)
-                {
-                    MyFilesStruct myFilesStruct = new MyFilesStruct();
-
-                  /*  if ((cvMainVMM.selectedGeoTablet != null) && (cvMainVMM.selectedGeoTablet.fileName != null) && (file.Name.ToUpper() == cvMainVMM.selectedGeoTablet.fileName.ToUpper()))
-                    {
-                        if (dir.FullName.ToUpper() == GlobalData.Instance.geoProfile.fullTabletPath.ToUpper())
-                        {
-                            myFilesStruct.fileName = file.Name + " *";
-                            myFilesStruct.isSelected = true;
-                        }
-                        else
-                        {
-                            myFilesStruct.fileName = file.Name;
-                            myFilesStruct.isSelected = false;
-                        }
-                    }
-                    else*/
-                    {
-                        myFilesStruct.fileName = file.Name;
-                        myFilesStruct.isSelected = false;
-                    }
-                    myFilesStructs.Add(myFilesStruct);
-                }
-                //cvMainVMM.selectedDirectory = dir.FullName;
-                //cvMainVMM.currDirectory = dir.FullName;
-
-               // GetAllPadFiles(dir.FullName);
             }
 
             catch (Exception ex)

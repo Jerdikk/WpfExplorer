@@ -1,8 +1,15 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace WpfExplorer
 {
+    public enum TypesFile
+    {
+        File,
+        Directory,
+        Drive
+    }
     public class BaseViewModel : INotifyPropertyChanged
     {
         // public const int MaxGrafikPoints = 5000;        
@@ -52,7 +59,11 @@ namespace WpfExplorer
                 OnPropertyChanged(nameof(isSelected));
             }
         }
+        public string fullName;
+        public TypesFile typeFile;
+        public object tag;
 
+        public ObservableCollection<MyFilesStruct> myFilesStructs { get; set; }
 
     }
 
