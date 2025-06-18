@@ -119,7 +119,9 @@ namespace WpfExplorer
 
                 if (trItem == null) return;
 
-                DirectoryInfo dir;
+                if (trItem.Tag is FileInfo) return;
+
+                    DirectoryInfo dir;
                 if (trItem.Tag is DriveInfo)
                 {
                     DriveInfo drive = (DriveInfo)trItem.Tag;

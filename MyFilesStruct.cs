@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace WpfExplorer
@@ -53,6 +54,9 @@ namespace WpfExplorer
             }
         }
 
+        public bool IsFile;
+
+        public List<MyFilesStruct> myFilesStructs = new List<MyFilesStruct>();
 
     }
 
