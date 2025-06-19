@@ -26,14 +26,14 @@ namespace WpfExplorer
         public TreeViewItem trItem;
         public MyFilesStruct selectedFileStruct;
         public MainWindowModel model;
-     //   public ObservableCollection<MyFilesStruct> myFilesStructs { get; set; } = new ObservableCollection<MyFilesStruct>();
+    
         public MainWindow()
         {
             model = new MainWindowModel();
             InitializeComponent();
             this.DataContext = model;
             trView.Items.Clear();
-            model.Title = "111";
+            model.Title = "---";
             try
             {
                 foreach (DriveInfo drive in DriveInfo.GetDrives())
@@ -54,7 +54,7 @@ namespace WpfExplorer
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("tabletsettings 1 : " + ex.Message + " --- " + ex.StackTrace);
+                Debug.WriteLine("1 : " + ex.Message + " --- " + ex.StackTrace);
             }
         }
 
@@ -82,28 +82,7 @@ namespace WpfExplorer
                 else
                     dir = (DirectoryInfo)myFilesStruct1.tag;
 
-               // myFilesStructs.Clear();
-
-               // FileInfo[] fileInfos = dir.GetFiles("*.*");
-
-
-
-                /*foreach (FileInfo file in fileInfos)
-                {
-                    MyFilesStruct myFilesStruct = new MyFilesStruct();
-
-                    {
-                        myFilesStruct.fileName = file.Name;
-                        myFilesStruct.fullName = file.FullName;
-                        myFilesStruct.isSelected = false;
-                        myFilesStruct.isFile = true;
-                    }
-                    myFilesStructs.Add(myFilesStruct);
-                }*/
-
-                // cvMainVMM.selectedDirectory = dir.FullName;
-                // GetAllPadFiles(dir.FullName);
-
+              
                 foreach (DirectoryInfo subDir in dir.GetDirectories())
                 {
                     TreeViewItem newItem = new TreeViewItem();
@@ -134,7 +113,7 @@ namespace WpfExplorer
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("Error in TabletSettings Trview_expanded : " + ex.Message + " --- " + ex.StackTrace);
+                Debug.WriteLine("Error in Trview_expanded : " + ex.Message + " --- " + ex.StackTrace);
                 int uu = 1;
             }
 
