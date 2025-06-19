@@ -13,7 +13,10 @@ namespace WpfExplorer
         public string Title
             { get { return _title; } set { _title = value; OnPropertyChanged(nameof(Title)); } }
         public string Description
-            { get { return _description; } set {Title = value; OnPropertyChanged(nameof(Description)); } }
+            { get { return _description; } set {_description = value; OnPropertyChanged(nameof(Description)); } }
+
+        public MyFilesStruct file1 { get; set; }
+        public MyFilesStruct file2 { get; set; }
 
     }
 }
