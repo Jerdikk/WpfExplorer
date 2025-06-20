@@ -226,11 +226,10 @@ namespace WpfExplorer
                 trItem = (TreeViewItem)e.OriginalSource;
 
                 if (trItem == null) return;
-
-                //MyFilesStruct dir;
+                                
                 selectedFileStruct2 = (MyFilesStruct)trItem.Tag;
                 model.Description = selectedFileStruct2.fullName;
-                //dir.isSelected = true;
+                
 
             }
             catch (Exception ex)
