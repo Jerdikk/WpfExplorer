@@ -40,6 +40,7 @@ namespace WpfExplorer
         public string fullName;
         public TypesFile typeFile;
         public object tag;
+        public string hashString;
 
         public ObservableCollection<MyFilesStruct> myFilesStructs { get; set; }
 

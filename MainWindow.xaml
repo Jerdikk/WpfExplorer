@@ -5,10 +5,10 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfExplorer"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="1000">
+        Title="MainWindow" Height="450" Width="1000" Closing="Window_Closing" Loaded="Window_Loaded">
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="60"/>
+            <RowDefinition Height="80"/>
             <RowDefinition/>
             <RowDefinition Height="50"/>
         </Grid.RowDefinitions>
@@ -18,12 +18,14 @@
         </Grid.ColumnDefinitions>
 
         <Grid Grid.Row="0" Grid.Column="0">
-           
-            <StackPanel Orientation="Horizontal">
-                <TextBox x:Name="tx1" Text="{Binding Title}" Width="350" Height="25" HorizontalAlignment="Left" Margin="25,5,5,5" VerticalAlignment="Center"/>
-                <Button x:Name="butt1" Content="Set" Width="80" Height="25" Click="butt1_Click"/>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="tx1" Text="{Binding Title}" Width="350" Height="25" HorizontalAlignment="Left" Margin="25,5,5,5" VerticalAlignment="Center"/>
+                    <Button x:Name="butt1" Content="Set" Width="80" Height="25" Click="butt1_Click"/>
+                </StackPanel>
+                <TextBlock x:Name="hashStr1" Width="220" Height="25" Margin="5" HorizontalAlignment="Left"/>
             </StackPanel>
-            
+
         </Grid>
         <Grid Grid.Row="1" Grid.Column="0">
             <TreeView x:Name="trView" TreeViewItem.Expanded="trView_Expanded" TreeViewItem.Selected="trView_Selected">
@@ -50,9 +52,12 @@
             </TreeView>
         </Grid>
         <Grid Grid.Row="0" Grid.Column="1">
-            <StackPanel Orientation="Horizontal">
-            <TextBox x:Name="tx2" Text="{Binding Description}" Width="350" Height="25" HorizontalAlignment="Left" Margin="25,5,5,5" VerticalAlignment="Center"/>
-            <Button x:Name="butt2" Content="Set" Width="80" Height="25" Click="butt2_Click"/>
+            <StackPanel Orientation="Vertical">
+                <StackPanel Orientation="Horizontal">
+                    <TextBox x:Name="tx2" Text="{Binding Description}" Width="350" Height="25" HorizontalAlignment="Left" Margin="25,5,5,5" VerticalAlignment="Center"/>
+                    <Button x:Name="butt2" Content="Set" Width="80" Height="25" Click="butt2_Click"/>
+                </StackPanel>
+                <TextBlock x:Name="hashStr2" Width="220" Height="25" Margin="5" HorizontalAlignment="Left"/>
             </StackPanel>
         </Grid>
         <Grid Grid.Row="1" Grid.Column="1">

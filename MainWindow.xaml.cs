@@ -4,6 +4,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -11,6 +12,7 @@ using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
@@ -27,10 +29,11 @@ namespace WpfExplorer
         public MyFilesStruct selectedFileStruct;
         public MyFilesStruct selectedFileStruct2;
         public MainWindowModel model;
-    
+    public MapHash mapFilesHash;
         public MainWindow()
         {
             model = new MainWindowModel();
+            mapFilesHash = new MapHash();
             InitializeComponent();
             this.DataContext = model;
             trView.Items.Clear();
@@ -241,16 +244,144 @@ namespace WpfExplorer
         private void butt2_Click(object sender, RoutedEventArgs e)
         {
             model.file2 = selectedFileStruct2;
+            
+
+            try
+            {
+                if (selectedFileStruct2.typeFile == TypesFile.File)
+                {
+                   // byte[] result;
+                    if (File.Exists(selectedFileStruct2.fullName))
+                    {
+                        GenerateMD5Hash(selectedFileStruct2);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+                hashStr1.Text = "Failed calc MD5 hash";
+            }
+
+        }
+
+        private void GenerateMD5Hash(MyFilesStruct myFilesStruct)
+        {
+            byte[] result;
+            using (HashAlgorithm hash = MD5.Create())
+            {
+                using (Stream stream = File.OpenRead(myFilesStruct.fullName))
+                {
+                    result = hash.ComputeHash(stream);
+
+                    StringBuilder _stringBuilder = new StringBuilder(result.Length * 2);
+
+
+                    foreach (byte value in result)
+                    {
+                        _stringBuilder.Append(value.ToString("x2"));
+                    }
+
+
+                    hashStr2.Text = _stringBuilder.ToString();
+                    selectedFileStruct2.hashString = _stringBuilder.ToString();
+
+                    mapFilesHash.Add(myFilesStruct.hashString, myFilesStruct.fullName);
+
+                }
+            }            
         }
 
         private void butt1_Click(object sender, RoutedEventArgs e)
         {
             model.file1 = selectedFileStruct;
+
+            try
+            {
+                if (selectedFileStruct.typeFile == TypesFile.File)
+                {
+                    byte[] result;
+                    if (File.Exists(selectedFileStruct.fullName))
+                    {
+                        using (HashAlgorithm hash = MD5.Create())
+                        {
+                            using (Stream stream = File.OpenRead(selectedFileStruct.fullName))
+                            {
+                                result = hash.ComputeHash(stream);
+
+                                StringBuilder _stringBuilder = new StringBuilder(result.Length * 2);
+                                
+
+                                foreach (byte value in result)
+                                {
+                                    _stringBuilder.Append(value.ToString("x2"));
+                                }
+
+
+                                hashStr1.Text = _stringBuilder.ToString();
+                                selectedFileStruct.hashString = _stringBuilder.ToString();
+
+                                mapFilesHash.Add(selectedFileStruct.hashString, selectedFileStruct.fullName);
+
+                            }
+                        }
+                    }
+                }
+            }
+            catch(Exception ex) 
+            {
+                Debug.WriteLine(ex.ToString());
+                hashStr1.Text = "Failed calc MD5 hash";
+            }
+
         }
 
         private void sync_Click(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                using (StreamWriter outputFile = new StreamWriter("hashMD5files.txt"))
+                {
+                    foreach (MapHashValue mapHashValue in mapFilesHash)
+                    {
+                        string[] t1 = mapHashValue.ToString();
+                        int count = t1.Count();
+                        for (int i = 0; i < count; i++)
+                            outputFile.WriteLine(t1[i]);
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                using (StreamReader reader = new StreamReader("hashMD5files.txt"))
+                {
+                    if (mapFilesHash == null)
+                        mapFilesHash = new MapHash();
+                    while(!reader.EndOfStream)
+                    {
+                        string line = reader.ReadLine();
+                        string[] t1 = line.Split('*');
+                        mapFilesHash.Add(t1[0], t1[1]);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine(ex.ToString());
+            }
         }
     }
 }
