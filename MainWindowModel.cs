@@ -15,8 +15,8 @@ namespace WpfExplorer
         public string Description
             { get { return _description; } set {_description = value; OnPropertyChanged(nameof(Description)); } }
 
-        public MyFilesStruct file1 { get; set; }
-        public MyFilesStruct file2 { get; set; }
+        public MyFilesStruct leftFileStruct { get; set; }
+        public MyFilesStruct rightFileStruct { get; set; }
 
     }
 }

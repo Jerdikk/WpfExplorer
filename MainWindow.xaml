@@ -21,7 +21,7 @@
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
                     <TextBox x:Name="tx1" Text="{Binding Title}" Width="350" Height="25" HorizontalAlignment="Left" Margin="25,5,5,5" VerticalAlignment="Center"/>
-                    <Button x:Name="butt1" Content="Set" Width="80" Height="25" Click="butt1_Click"/>
+                    <Button x:Name="butt1" Content="Set" Width="80" Height="25" Click="leftButt_Click"/>
                 </StackPanel>
                 <TextBlock x:Name="hashStr1" Width="220" Height="25" Margin="5" HorizontalAlignment="Left"/>
             </StackPanel>
@@ -55,7 +55,7 @@
             <StackPanel Orientation="Vertical">
                 <StackPanel Orientation="Horizontal">
                     <TextBox x:Name="tx2" Text="{Binding Description}" Width="350" Height="25" HorizontalAlignment="Left" Margin="25,5,5,5" VerticalAlignment="Center"/>
-                    <Button x:Name="butt2" Content="Set" Width="80" Height="25" Click="butt2_Click"/>
+                    <Button x:Name="butt2" Content="Set" Width="80" Height="25" Click="rightButt_Click"/>
                 </StackPanel>
                 <TextBlock x:Name="hashStr2" Width="220" Height="25" Margin="5" HorizontalAlignment="Left"/>
             </StackPanel>

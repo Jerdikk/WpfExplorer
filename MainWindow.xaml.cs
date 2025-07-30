@@ -241,10 +241,9 @@ namespace WpfExplorer
             }
         }
 
-        private void butt2_Click(object sender, RoutedEventArgs e)
+        private void rightButt_Click(object sender, RoutedEventArgs e)
         {
-            model.file2 = selectedFileStruct2;
-            
+            model.rightFileStruct = selectedFileStruct2;            
 
             try
             {
@@ -256,6 +255,29 @@ namespace WpfExplorer
                         GenerateMD5Hash(selectedFileStruct2);
                     }
                 }
+                else
+                {
+                    if (selectedFileStruct2.typeFile == TypesFile.Directory)
+                    {
+                        MyFilesStruct test = new MyFilesStruct();
+                        test.tag = selectedFileStruct2.tag;
+                        test.fullName = selectedFileStruct2.fullName;
+                        test.typeFile = selectedFileStruct2.typeFile;
+                        test.hashString = selectedFileStruct2.hashString;
+                        test.isSelected = selectedFileStruct2.isSelected;
+                        test.myFilesStructs = selectedFileStruct2.myFilesStructs;
+                        if (test.myFilesStructs == null)
+                            test.myFilesStructs = new ObservableCollection<MyFilesStruct> ();
+
+                        DirectoryInfo directoryI = (DirectoryInfo)selectedFileStruct2.tag;
+                        if (directoryI != null)
+                        {
+                            GetDirAndFiles(test, directoryI);
+
+                        }
+                        int hh = 1;
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -263,6 +285,27 @@ namespace WpfExplorer
                 hashStr1.Text = "Failed calc MD5 hash";
             }
 
+        }
+
+        private static void GetDirAndFiles(MyFilesStruct test, DirectoryInfo directoryI)
+        {
+            foreach (DirectoryInfo subDir in directoryI.GetDirectories())
+            {
+                MyFilesStruct myFilesStruct = new MyFilesStruct();
+                myFilesStruct.typeFile = TypesFile.Directory;
+                myFilesStruct.fullName = subDir.FullName;
+                myFilesStruct.tag = subDir;
+                test.myFilesStructs.Add(myFilesStruct);
+            }
+            foreach (FileInfo files in directoryI.GetFiles())
+            {
+                MyFilesStruct myFilesStruct = new MyFilesStruct();
+                myFilesStruct.typeFile = TypesFile.File;
+                myFilesStruct.fullName = files.FullName;
+                myFilesStruct.fileName = files.Name;
+                myFilesStruct.tag = files;
+                test.myFilesStructs.Add(myFilesStruct);
+            }
         }
 
         private void GenerateMD5Hash(MyFilesStruct myFilesStruct)
@@ -292,9 +335,9 @@ namespace WpfExplorer
             }            
         }
 
-        private void butt1_Click(object sender, RoutedEventArgs e)
+        private void leftButt_Click(object sender, RoutedEventArgs e)
         {
-            model.file1 = selectedFileStruct;
+            model.leftFileStruct = selectedFileStruct;
 
             try
             {
