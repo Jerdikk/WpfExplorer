@@ -65,6 +65,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="BaseViewModel.cs" />
+    <Compile Include="FileTreeComparer.cs" />
+    <Compile Include="FileHashCalculator.cs" />
+    <Compile Include="DirectoryScanner.cs" />
+    <Compile Include="Tree.cs" />
     <Compile Include="MapHash.cs" />
     <Compile Include="HeaderToImageConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">

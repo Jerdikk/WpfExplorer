@@ -42,7 +42,7 @@ namespace WpfExplorer
         public object tag;
         public string hashString;
 
-        public ObservableCollection<MyFilesStruct> myFilesStructs { get; set; }
+    //    public ObservableCollection<MyFilesStruct> myFilesStructs { get; set; }
 
     }
 

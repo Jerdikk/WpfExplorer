@@ -29,7 +29,7 @@ namespace WpfExplorer
         public MyFilesStruct selectedFileStruct;
         public MyFilesStruct selectedFileStruct2;
         public MainWindowModel model;
-    public MapHash mapFilesHash;
+        public MapHash mapFilesHash;
         public MainWindow()
         {
             model = new MainWindowModel();
@@ -49,7 +49,7 @@ namespace WpfExplorer
                     item.Header = drive.ToString();
                     //item.Items.Add("*");
                     trView.Items.Add(item);
-                    MyFilesStruct myFilesStruct = new MyFilesStruct();  
+                    MyFilesStruct myFilesStruct = new MyFilesStruct();
                     myFilesStruct.fileName = drive.Name;
                     myFilesStruct.fullName = drive.Name;
                     myFilesStruct.typeFile = TypesFile.Drive;
@@ -102,11 +102,11 @@ namespace WpfExplorer
                 else
                     dir = (DirectoryInfo)myFilesStruct1.tag;
 
-              
+
                 foreach (DirectoryInfo subDir in dir.GetDirectories())
                 {
                     TreeViewItem newItem = new TreeViewItem();
-                   // newItem.Tag = subDir;
+                    // newItem.Tag = subDir;
                     newItem.Header = subDir.ToString();
                     newItem.Items.Add("*");
                     item.Items.Add(newItem);
@@ -119,7 +119,7 @@ namespace WpfExplorer
                 foreach (FileInfo subDir in dir.GetFiles())
                 {
                     TreeViewItem newItem = new TreeViewItem();
-                   // newItem.Tag = subDir;
+                    // newItem.Tag = subDir;
                     newItem.Header = subDir.ToString();
                     //newItem.Items.Add("*");
                     item.Items.Add(newItem);
@@ -229,10 +229,10 @@ namespace WpfExplorer
                 trItem = (TreeViewItem)e.OriginalSource;
 
                 if (trItem == null) return;
-                                
+
                 selectedFileStruct2 = (MyFilesStruct)trItem.Tag;
                 model.Description = selectedFileStruct2.fullName;
-                
+
 
             }
             catch (Exception ex)
@@ -243,13 +243,13 @@ namespace WpfExplorer
 
         private void rightButt_Click(object sender, RoutedEventArgs e)
         {
-            model.rightFileStruct = selectedFileStruct2;            
+            model.rightFileStruct = selectedFileStruct2;
 
             try
             {
                 if (selectedFileStruct2.typeFile == TypesFile.File)
                 {
-                   // byte[] result;
+                    // byte[] result;
                     if (File.Exists(selectedFileStruct2.fullName))
                     {
                         GenerateMD5Hash(selectedFileStruct2);
@@ -257,24 +257,28 @@ namespace WpfExplorer
                 }
                 else
                 {
+                   // model.rightTree = new Tree<MyFilesStruct>(selectedFileStruct2);
                     if (selectedFileStruct2.typeFile == TypesFile.Directory)
                     {
-                        MyFilesStruct test = new MyFilesStruct();
-                        test.tag = selectedFileStruct2.tag;
-                        test.fullName = selectedFileStruct2.fullName;
-                        test.typeFile = selectedFileStruct2.typeFile;
-                        test.hashString = selectedFileStruct2.hashString;
-                        test.isSelected = selectedFileStruct2.isSelected;
-                        test.myFilesStructs = selectedFileStruct2.myFilesStructs;
-                        if (test.myFilesStructs == null)
-                            test.myFilesStructs = new ObservableCollection<MyFilesStruct> ();
+                        var scanner = new DirectoryScanner();
+                        var tree = scanner.ScanDirectory(selectedFileStruct2.fullName);
+                        model.rightTree = new Tree<MyFilesStruct>(tree);
+                        /*  MyFilesStruct test = new MyFilesStruct();
+                          test.tag = selectedFileStruct2.tag;
+                          test.fullName = selectedFileStruct2.fullName;
+                          test.typeFile = selectedFileStruct2.typeFile;
+                          test.hashString = selectedFileStruct2.hashString;
+                          test.isSelected = selectedFileStruct2.isSelected;
+                          test.myFilesStructs = selectedFileStruct2.myFilesStructs;
+                          if (test.myFilesStructs == null)
+                              test.myFilesStructs = new ObservableCollection<MyFilesStruct> ();
 
-                        DirectoryInfo directoryI = (DirectoryInfo)selectedFileStruct2.tag;
-                        if (directoryI != null)
-                        {
-                            GetDirAndFiles(test, directoryI);
+                          DirectoryInfo directoryI = (DirectoryInfo)selectedFileStruct2.tag;
+                          if (directoryI != null)
+                          {
+                              GetDirAndFiles(test, directoryI);
 
-                        }
+                          }*/
                         int hh = 1;
                     }
                 }
@@ -295,7 +299,7 @@ namespace WpfExplorer
                 myFilesStruct.typeFile = TypesFile.Directory;
                 myFilesStruct.fullName = subDir.FullName;
                 myFilesStruct.tag = subDir;
-                test.myFilesStructs.Add(myFilesStruct);
+                //test.myFilesStructs.Add(myFilesStruct);
             }
             foreach (FileInfo files in directoryI.GetFiles())
             {
@@ -304,7 +308,7 @@ namespace WpfExplorer
                 myFilesStruct.fullName = files.FullName;
                 myFilesStruct.fileName = files.Name;
                 myFilesStruct.tag = files;
-                test.myFilesStructs.Add(myFilesStruct);
+               // test.myFilesStructs.Add(myFilesStruct);
             }
         }
 
@@ -332,7 +336,7 @@ namespace WpfExplorer
                     mapFilesHash.Add(myFilesStruct.hashString, myFilesStruct.fullName);
 
                 }
-            }            
+            }
         }
 
         private void leftButt_Click(object sender, RoutedEventArgs e)
@@ -353,7 +357,7 @@ namespace WpfExplorer
                                 result = hash.ComputeHash(stream);
 
                                 StringBuilder _stringBuilder = new StringBuilder(result.Length * 2);
-                                
+
 
                                 foreach (byte value in result)
                                 {
@@ -371,7 +375,7 @@ namespace WpfExplorer
                     }
                 }
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
                 hashStr1.Text = "Failed calc MD5 hash";
@@ -379,9 +383,35 @@ namespace WpfExplorer
 
         }
 
-        private void sync_Click(object sender, RoutedEventArgs e)
-        {
+        private async Task sync_ClickAsync(object sender, RoutedEventArgs e)
+        {            
+            string dir1 = tx1.Text;
 
+            Debug.WriteLine("Введите путь ко второй директории:");
+            string dir2 = tx2.Text;
+
+            if (!Directory.Exists(dir1) || !Directory.Exists(dir2))
+            {
+                Debug.WriteLine("Одна из директорий не существует!");
+                return;
+            }
+
+            var comparer = new FileTreeComparer();
+            var differences = await comparer.CompareDirectoriesAsync(dir1, dir2);
+
+            Debug.WriteLine("\nРезультаты сравнения:");
+            if (differences.Count == 0)
+            {
+                Debug.WriteLine("Директории идентичны.");
+            }
+            else
+            {
+                foreach (var diff in differences)
+                {
+                    Debug.WriteLine(diff);
+                }
+                Debug.WriteLine($"\nНайдено {differences.Count} различий.");
+            }
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
@@ -399,7 +429,7 @@ namespace WpfExplorer
                     }
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Debug.WriteLine(ex.ToString());
             }
@@ -413,7 +443,7 @@ namespace WpfExplorer
                 {
                     if (mapFilesHash == null)
                         mapFilesHash = new MapHash();
-                    while(!reader.EndOfStream)
+                    while (!reader.EndOfStream)
                     {
                         string line = reader.ReadLine();
                         string[] t1 = line.Split('*');
@@ -425,6 +455,11 @@ namespace WpfExplorer
             {
                 Debug.WriteLine(ex.ToString());
             }
+        }
+
+        private void sync_Click(object sender, RoutedEventArgs e)
+        {
+            sync_ClickAsync(sender,e);
         }
     }
 }

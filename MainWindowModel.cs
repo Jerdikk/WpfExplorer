@@ -18,5 +18,8 @@ namespace WpfExplorer
         public MyFilesStruct leftFileStruct { get; set; }
         public MyFilesStruct rightFileStruct { get; set; }
 
+        public Tree<MyFilesStruct> leftTree;
+        public Tree<MyFilesStruct> rightTree;
+
     }
 }
